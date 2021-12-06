@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nasa</title>
+</head>
+
+<style>
+    .image{
+        width: calc(100vw / 6);
+        height: 300px;
+    }
+    .photo_list{
+        display: flex;
+        row-gap: 10px;
+        column-gap: 10px;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-content: stretch;
+    }
+</style>
+
+<body>
+<input id='color_input' type="color">
+<input id='date_input' type="date">
+<button onclick="search_photo(0)">Поиск</button>
+<div>
+    <div class="photo_list" id='data'>
+</div>
+
+
+</body>
+<script>
+    function search_photo() {
+        url = 'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date='+document.getElementById("date_input").value+
+            '&api_key=ayUG1yB4GpuOMSl2KSB1hlTN1m0YSDjdB9YdaPIz'
+        var request = new XMLHttpRequest();
+        request.open('GET', url);
+        request.responseType = 'json';
+        request.onload = function () {
+            for (const photo in request.response) {
+                datas = request.response[photo]
+                text = ''
+                for (const el in datas) {
+                    console.log(el)
+                    data = datas[el]
+                    text += `
+                    <div>
+                        <img class="image" src=`+ data['img_src'] +`>
+                    </div>
+                    `
+
+                }
+                document.getElementById('data').innerHTML += text
+
+            }
+        };
+        request.send();
+    }
+</script>
+</html>
